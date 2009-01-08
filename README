@@ -1,0 +1,9 @@
+== Composity
+
+Composity is a Ruby on Rails based utility for doing quick calculations on composite structures. Some of the features are:
+
+ - Material database
+ - Support for isotrope and anisotrope materials
+ - Calculation of stiffness matrixes based on thickness and angle of lamina
+
+Developed by Logan Raarup

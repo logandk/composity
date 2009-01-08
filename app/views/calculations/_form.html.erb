@@ -1,0 +1,130 @@
+<% content_for :head do %>
+	<style type="text/css">
+	div.layer
+	{
+		background-color: #EFEFEF;
+		margin-top: 4px;
+		margin-bottom: 4px;
+		padding: 4px;
+	}
+	
+	div.layer div.layer_id
+	{
+		font-size: 200%;
+		float: left;
+		font-family: Georgia,"Bitstream Vera Serif","Times New Roman",serif;
+		color: #666666;
+		padding: 12px;
+	}
+	
+	div.layer_remove
+	{
+		font-size: 70%;
+		float: right;
+		margin-top: 15px;
+	}
+	
+	div.layer_remove a
+	{
+		color: #666666;
+		text-decoration: none;
+	}
+	
+	span.layer_fields
+	{
+		margin-right: 20px;
+	}
+	</style>
+
+	<% javascript_tag do %>
+	var layers = <%= @calculation.layers.size %>;
+	
+	function add_layer()
+	{
+		layers++;
+		
+		var new_id = layers;
+		var new_layer = $("layers").childElements().last().cloneNode(true);
+		
+		new_layer.down("input").id = "layers_" + new_id + "_position";
+		new_layer.down("input").name = "layers[" + new_id + "][position]";
+		
+		var fields = new_layer.down("span.layer_fields");
+		fields.down("label").htmlFor = "layers_" + new_id + "_material_id";
+		fields.down("select").id = "layers_" + new_id + "_material_id";
+		fields.down("select").name = "layers[" + new_id + "][material_id]";
+		
+		fields = fields.next();
+		fields.down("label").htmlFor = "layers_" + new_id + "_thickness";
+		fields.down("input").id = "layers_" + new_id + "_thickness";
+		fields.down("input").name = "layers[" + new_id + "][thickness]";
+		
+		fields = fields.next();
+		fields.down("label").htmlFor = "layers_" + new_id + "_angle";
+		fields.down("input").id = "layers_" + new_id + "_angle";
+		fields.down("input").name = "layers[" + new_id + "][angle]";
+		
+		$("layers").insert(new_layer);
+		
+		update_positions();
+		init_form();
+		
+		return false;
+	}
+	
+	function update_positions()
+	{
+		var position = 1;
+		
+		$("layers").childElements().each(function (layer) {
+			layer.down("input").value = position;
+			layer.down("div.layer_id").update(position);
+			
+			position++;
+		});
+	}
+	
+	function init_form()
+	{
+		Sortable.create("layers", { tag: 'div', only: 'layer', onChange: update_positions });
+	}
+	
+	document.observe("dom:loaded", init_form);
+	<% end %>
+<% end %>
+
+<% form_for(@calculation) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :layers %> <a href="#" onclick="return add_layer();" style="font-size: 80%; margin-left: 30px;">Add layer</a><br />
+		
+		<div id="layers">
+			<% layer_number = 1 %>
+		
+			<% @calculation.layers.each do |layer| %>
+				<% fields_for "layers[#{layer_number}]", layer do |fl| %>
+					<div class="layer">
+						<div class="layer_remove"><a href="#" onclick="this.up('div.layer').remove(); update_positions(); return false;">remove</a></div>
+						<%= fl.hidden_field :position %>
+						<div class="layer_id"><%= layer_number %></div>
+						<p>
+							<span class="layer_fields"><%= fl.label :material_id %>: <%= fl.select(:material_id, Material.find(:all).collect {|m| [ m.name, m.id ] }) %></span>
+							<span class="layer_fields"><%= fl.label :thickness %>: <%= fl.text_field :thickness, :size => 3 %>mm</span>
+							<span class="layer_fields"><%= fl.label :angle %>: <%= fl.text_field :angle, :size => 3 %>&deg;</span>
+						</p>
+					</div>
+				<% end%>
+			
+				<% layer_number += 1 %>
+			<% end %>
+		</div>
+  </p>
+  <p>
+    <%= f.submit "Save" %>
+  </p>
+<% end %>

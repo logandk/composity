@@ -1,0 +1,22 @@
+<h2>Listing materials</h2>
+
+<table width="600">
+  <tr>
+    <th>Symbol</th>
+    <th>Name</th>
+  </tr>
+
+<% for material in @materials %>
+  <tr>
+    <td><%=h material.symbol %></td>
+    <td><%=h material.name %></td>
+    <td><%= link_to 'Show', material %></td>
+    <td><%= link_to 'Edit', edit_material_path(material) %></td>
+    <td><%= link_to 'Destroy', material, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New material', new_material_path %>

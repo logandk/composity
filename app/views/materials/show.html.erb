@@ -1,0 +1,64 @@
+<h2>Material: <%=h @material.name %> (<%=h @material.symbol %>)</h2>
+
+<p><strong>Type:</strong> <%= @material.data.mechanical_properties.capitalize %><br /><br /></p>
+
+<p>
+	<% if @material.data.mechanical_properties == 'isotrope' %>
+
+			<span class="short_calc"><%=m 'E_' + @material.symbol + ' = ' + var(:e_module) + ' GPa' %></span>
+			<%=m '\nu_' + @material.symbol + ' = ' + var(:poisson_module) %><br /><br /><br />
+		
+			<%=m 'Q_11 = \frac{E_' + @material.symbol + '}{1-\nu_' + @material.symbol + '^2} = \frac{' + var(:e_module) + '}{1-' + var(:poisson_module) + '^2} = ' + n(@material.stiffness[0,0]) + 'MPa'  %><br />
+			<%=m 'Q_12 = \frac{\nu_' + @material.symbol + ' E_' + @material.symbol + '}{1-\nu_' + @material.symbol + '^2} = \frac{' + var(:poisson_module) + ' * ' + var(:e_module) + '}{1-' + var(:poisson_module) + '^2} = ' + n(@material.stiffness[0,1]) + 'MPa' %><br />
+			<%=m 'Q_22 = Q_11 = ' + n(@material.stiffness[0,0]) + 'MPa' %><br /><br /><br />
+		
+			<%=m 'Q_16 = 0MPa' %><br />
+			<%=m 'Q_26 = 0MPa' %><br />
+			<%=m 'Q_66 = \frac{E_' + @material.symbol + '}{2(1+\nu_' + @material.symbol + ')} = \frac{' + var(:e_module) + '}{2(1+' + var(:poisson_module) + ')} = ' + n(@material.stiffness[2,2]) + 'MPa' %><br /><br /><br />
+	
+			<%=m '[Q] = \left[\array{ Q_11 & Q_12 & Q_16 \\\\ Q_12 & Q_22 & Q_26 \\\\ Q_16 & Q_26 & Q_66 }\right] = \left[\array{ ' + n(@material.stiffness[0,0]) + ' & ' + n(@material.stiffness[0,1]) + ' & ' + n(@material.stiffness[0,2]) + ' \\\\ ' + n(@material.stiffness[1,0]) + ' & ' + n(@material.stiffness[1,1]) + ' & ' + n(@material.stiffness[1,2]) + ' \\\\ ' + n(@material.stiffness[2,0]) + ' & ' + n(@material.stiffness[2,1]) + ' & ' + n(@material.stiffness[2,2]) + ' }\right] MPa' %><br /><br />
+		
+	<% elsif @material.data.mechanical_properties == 'stiffness' %>
+		
+			<%=m '[Q] = \left[\array{ Q_11 & Q_12 & Q_16 \\\\ Q_12 & Q_22 & Q_26 \\\\ Q_16 & Q_26 & Q_66 }\right] = \left[\array{ ' + n(@material.stiffness[0,0]) + ' & ' + n(@material.stiffness[0,1]) + ' & ' + n(@material.stiffness[0,2]) + ' \\\\ ' + n(@material.stiffness[1,0]) + ' & ' + n(@material.stiffness[1,1]) + ' & ' + n(@material.stiffness[1,2]) + ' \\\\ ' + n(@material.stiffness[2,0]) + ' & ' + n(@material.stiffness[2,1]) + ' & ' + n(@material.stiffness[2,2]) + ' }\right] MPa' %><br /><br />
+		
+	<% else %>
+
+			<span class="short_calc"><%=m 'E_f = ' + var(:e_module_fibre) + ' GPa' %></span>
+			<span class="short_calc"><%=m '\nu_f = ' + var(:poisson_module_fibre) %></span>
+			<span class="short_calc"><%=m 'V_f = ' + var(:volume_factor_fibre) %></span><br /><br />
+			
+			<span class="short_calc"><%=m 'E_m = ' + var(:e_module_matrix) + ' GPa' %></span>
+			<span class="short_calc"><%=m '\nu_m = ' + var(:poisson_module_matrix) %></span>
+			<span class="short_calc"><%=m 'V_m = ' + var(:volume_factor_matrix) %></span><br /><br /><br />
+			
+			<%=m 'V_f + V_m = 1' %><br /><br /><br />
+
+			<%=m 'E_1 = E_f * V_f + E_m * V_m = ' + var(:e_module_fibre) + ' * ' + var(:volume_factor_fibre) + ' + ' + var(:e_module_matrix) + ' * ' + var(:volume_factor_matrix) + ' = ' + n(@material.mixture[1]) + 'GPa' %><br />
+			<%=m 'E_2 = \frac{E_f * E_m}{V_f * E_m + V_m * E_f} = \frac{' + var(:e_module_fibre) + ' * ' + var(:e_module_matrix) + '}{' + var(:volume_factor_fibre) + ' * ' + var(:e_module_matrix) + ' + ' + var(:volume_factor_matrix) + ' * ' + var(:e_module_fibre) + '} = ' + n(@material.mixture[2]) + 'GPa' %><br /><br /><br />
+
+			<%=m '\nu_12 = V_f * \nu_f + V_m * \nu_m = ' + var(:volume_factor_fibre) + ' * ' + var(:poisson_module_fibre) + ' + ' + var(:volume_factor_matrix) + ' * ' + var(:poisson_module_matrix) + ' = ' + n(@material.poisson[12]) %><br />
+			<%=m '\nu_21 = \frac{\nu_12}{E_1} * E_2 = \frac{' + n(@material.poisson[12]) + '}{' + n(@material.mixture[1]) + '} * ' + n(@material.mixture[2]) + ' = ' + n(@material.poisson[21]) %><br /><br /><br />
+			
+			<%=m '|\nu_12| < \sqrt{\frac{E_1}{E_2}} = ' + n(@material.poisson[12]) + ' < \sqrt{\frac{' + n(@material.mixture[1]) + '}{' + n(@material.mixture[2]) + '}}' %> <strong><%= (@material.poisson[12] < Math.sqrt(@material.mixture[1] / @material.mixture[2])) ? "OK" : "ERROR" %></strong><br />
+			<%=m '|\nu_21| < \sqrt{\frac{E_2}{E_1}} = ' + n(@material.poisson[21]) + ' < \sqrt{\frac{' + n(@material.mixture[2]) + '}{' + n(@material.mixture[1]) + '}}' %> <strong><%= (@material.poisson[21] < Math.sqrt(@material.mixture[2] / @material.mixture[1])) ? "OK" : "ERROR" %></strong><br /><br /><br />
+			
+			<%=m 'G_f = \frac{E_f}{2(1 + \nu_f)} = \frac{' + var(:e_module_fibre) + '}{2(1 + ' + var(:volume_factor_fibre) + ')} = ' + n(@material.shear_module[:f]) + 'GPa' %><br />
+			<%=m 'G_m = \frac{E_m}{2(1 + \nu_m)} = \frac{' + var(:e_module_matrix) + '}{2(1 + ' + var(:volume_factor_matrix) + ')} = ' + n(@material.shear_module[:m]) + 'GPa' %><br />
+			<%=m 'G_12 = \frac{G_f * G_m}{V_m * G_f + V_f * G_m} = \frac{' + n(@material.shear_module[:f]) + ' * ' + n(@material.shear_module[:m]) + '}{' + var(:volume_factor_matrix) + ' * ' + n(@material.shear_module[:f]) + ' + ' + var(:volume_factor_fibre) + ' * ' + n(@material.shear_module[:m]) + '} = ' + n(@material.shear_module[12]) + 'GPa' %><br /><br /><br />
+			
+			<%=m 'Q_11 = \frac{E_1}{1 - \nu_12 * \nu_21} = \frac{' + n(@material.mixture[1] * 1000) + '}{1 - ' + n(@material.poisson[12]) + ' * ' + n(@material.poisson[21]) + '} = ' + n(@material.stiffness[0,0]) + 'MPa' %><br />
+			<%=m 'Q_12 = \frac{\nu_21 * E_1}{1 - \nu_12 * \nu_21} = \frac{' + n(@material.poisson[21]) + ' * ' + n(@material.mixture[1] * 1000) + '}{1 - ' + n(@material.poisson[12]) + ' * ' + n(@material.poisson[21]) + '} = ' + n(@material.stiffness[0,1]) + 'MPa' %><br />
+			<%=m 'Q_22 = \frac{E_2}{1 - \nu_12 * \nu_21} = \frac{' + n(@material.mixture[2] * 1000) + '}{1 - ' + n(@material.poisson[12]) + ' * ' + n(@material.poisson[21]) + '} = ' + n(@material.stiffness[1,1]) + 'MPa' %><br /><br /><br />
+			
+			<%=m 'Q_16 = 0MPa' %><br />
+			<%=m 'Q_26 = 0MPa' %><br />
+			<%=m 'Q_66 = G_12 = ' + n(@material.stiffness[2,2]) + 'MPa' %><br /><br /><br />
+			
+			<%=m '[Q] = \left[\array{ Q_11 & Q_12 & Q_16 \\\\ Q_12 & Q_22 & Q_26 \\\\ Q_16 & Q_26 & Q_66 }\right] = \left[\array{ ' + n(@material.stiffness[0,0]) + ' & ' + n(@material.stiffness[0,1]) + ' & ' + n(@material.stiffness[0,2]) + ' \\\\ ' + n(@material.stiffness[1,0]) + ' & ' + n(@material.stiffness[1,1]) + ' & ' + n(@material.stiffness[1,2]) + ' \\\\ ' + n(@material.stiffness[2,0]) + ' & ' + n(@material.stiffness[2,1]) + ' & ' + n(@material.stiffness[2,2]) + ' }\right] MPa' %><br /><br />
+
+	<% end %>
+</p>
+
+<%= link_to 'Edit', edit_material_path(@material) %> |
+<%= link_to 'Back', materials_path %>

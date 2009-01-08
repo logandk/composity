@@ -1,0 +1,22 @@
+<h2>Listing calculations</h2>
+
+<table width="600">
+  <tr>
+    <th>Title</th>
+    <th>Date</th>
+  </tr>
+
+<% for calculation in @calculations %>
+  <tr>
+    <td><%=h calculation.title %></td>
+    <td><%=l calculation.updated_at, :format => :short %></td>
+    <td><%= link_to 'Show', calculation %></td>
+    <td><%= link_to 'Edit', edit_calculation_path(calculation) %></td>
+    <td><%= link_to 'Destroy', calculation, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New calculation', new_calculation_path %>

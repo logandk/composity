@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  position: 1
+  material_id: 1
+  angle: 1.5
+
+two:
+  position: 1
+  material_id: 1
+  angle: 1.5

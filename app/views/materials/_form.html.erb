@@ -1,0 +1,123 @@
+<% content_for :head do %>
+	<% javascript_tag do %>
+	function show_fields(e)
+	{
+		if ($("material_data_mechanical_properties_isotrope").checked)
+		{
+			$("isotrope_container").show();
+			$("anisotrope_container").hide();
+			$("stiffness_container").hide();
+		}
+		else if ($("material_data_mechanical_properties_stiffness").checked)
+		{
+			$("isotrope_container").hide();
+			$("anisotrope_container").hide();
+			$("stiffness_container").show();
+		}
+		else
+		{
+			$("isotrope_container").hide();
+			$("anisotrope_container").show();
+			$("stiffness_container").hide();
+		}
+	}
+	
+	function init_form(e)
+	{
+		$("material_data_mechanical_properties_isotrope").observe('click', show_fields.bindAsEventListener(this));
+		$("material_data_mechanical_properties_anisotrope").observe('click', show_fields.bindAsEventListener(this));
+		$("material_data_mechanical_properties_stiffness").observe('click', show_fields.bindAsEventListener(this));
+		
+		show_fields(e);
+	}
+	
+	document.observe("dom:loaded", init_form.bindAsEventListener(this));
+	<% end %>
+<% end %>
+
+<% form_for(@material) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :symbol %><br />
+    <%= f.text_field :symbol %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+	<% fields_for @material.data do |d| %>
+  	<p>
+	    Type<br />
+	    <%= d.radio_button :mechanical_properties, "isotrope" %><%= d.label :mechanical_properties_isotrope, "Isotrope" %><br />
+			<%= d.radio_button :mechanical_properties, "anisotrope" %><%= d.label :mechanical_properties_anisotrope, "Anisotrope" %><br />
+			<%= d.radio_button :mechanical_properties, "stiffness" %><%= d.label :mechanical_properties_stiffness, "Stiffness matrix" %>
+	  </p>
+		<div id="isotrope_container">
+			<p>
+				<%= d.label :e_module, "E module" %><br />
+		    <%= d.text_field :e_module %>
+			</p>
+			<p>
+				<%= d.label :poisson_module, "Poisson module" %><br />
+		    <%= d.text_field :poisson_module %>
+			</p>
+		</div>
+		<div id="anisotrope_container">
+			<p>
+				<%= d.label :e_module_fibre, "E module (Fibre)" %><br />
+		    <%= d.text_field :e_module_fibre %>
+			</p>
+			<p>
+				<%= d.label :e_module_matrix, "E module (Matrix)" %><br />
+		    <%= d.text_field :e_module_matrix %>
+			</p>
+			<p>
+				<%= d.label :poisson_module_fibre, "Poisson module (Fibre)" %><br />
+		    <%= d.text_field :poisson_module_fibre %>
+			</p>
+			<p>
+				<%= d.label :poisson_module_matrix, "Poisson module (Matrix)" %><br />
+		    <%= d.text_field :poisson_module_matrix %>
+			</p>
+			<p>
+				<%= d.label :volume_factor_fibre, "Volume factor (Fibre)" %><br />
+		    <%= d.text_field :volume_factor_fibre %>
+			</p>
+			<p>
+				<%= d.label :volume_factor_matrix, "Volume factor (Fibre)" %><br />
+		    <%= d.text_field :volume_factor_matrix %>
+			</p>
+		</div>
+		<div id="stiffness_container">
+			<p>
+				<%= d.label :stiffness_q11, "Q<sub>11</sub>" %><br />
+		    <%= d.text_field :stiffness_q11 %>
+			</p>
+			<p>
+				<%= d.label :stiffness_q12, "Q<sub>12</sub>" %><br />
+		    <%= d.text_field :stiffness_q12 %>
+			</p>
+			<p>
+				<%= d.label :stiffness_q22, "Q<sub>22</sub>" %><br />
+		    <%= d.text_field :stiffness_q22 %>
+			</p>
+			<p>
+				<%= d.label :stiffness_q16, "Q<sub>16</sub>" %><br />
+		    <%= d.text_field :stiffness_q16 %>
+			</p>
+			<p>
+				<%= d.label :stiffness_q26, "Q<sub>26</sub>" %><br />
+		    <%= d.text_field :stiffness_q26 %>
+			</p>
+			<p>
+				<%= d.label :stiffness_q66, "Q<sub>66</sub>" %><br />
+		    <%= d.text_field :stiffness_q66 %>
+			</p>
+		</div>
+	<% end %>
+	
+  <p>
+    <%= f.submit "Save" %>
+  </p>
+<% end %>

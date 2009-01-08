@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
+    "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <title>Composity</title>
+	<%= stylesheet_link_tag 'scaffold' %>
+	<%= javascript_include_tag :defaults %>
+	
+	<%= yield :head %>
+</head>
+<body>
+
+<div style="font-size: 60%; color: #666666; float: right;">Developed by Logan Raarup</div>
+<h1>Composit<span style="color: red;">y</span></h1>
+
+<div style="background-color: #DEDEDE; padding: 5px;">
+	<a href="/">Calculations</a> | <a href="/materials">Materials</a>
+</div>
+
+<p style="color: green;"><%= flash[:notice] %></p>
+
+<%= yield %>
+
+</body>
+</html>
