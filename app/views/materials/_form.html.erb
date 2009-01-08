@@ -33,6 +33,15 @@
 	
 	document.observe("dom:loaded", init_form.bindAsEventListener(this));
 	<% end %>
+	
+	<style type="text/css">
+	div#isotrope_container p, div#anisotrope_container p, div#stiffness_container p
+	{
+		display: block;
+		float: left;
+		width: 180px;
+	}
+	</style>
 <% end %>
 
 <% form_for(@material) do |f| %>
@@ -56,68 +65,69 @@
 		<div id="isotrope_container">
 			<p>
 				<%= d.label :e_module, "E module" %><br />
-		    <%= d.text_field :e_module %>
+		    <%= d.text_field :e_module, :size => 4 %>GPa
 			</p>
 			<p>
 				<%= d.label :poisson_module, "Poisson module" %><br />
-		    <%= d.text_field :poisson_module %>
+		    <%= d.text_field :poisson_module, :size => 4 %>
 			</p>
 		</div>
 		<div id="anisotrope_container">
 			<p>
 				<%= d.label :e_module_fibre, "E module (Fibre)" %><br />
-		    <%= d.text_field :e_module_fibre %>
-			</p>
-			<p>
-				<%= d.label :e_module_matrix, "E module (Matrix)" %><br />
-		    <%= d.text_field :e_module_matrix %>
+		    <%= d.text_field :e_module_fibre, :size => 4 %>GPa
 			</p>
 			<p>
 				<%= d.label :poisson_module_fibre, "Poisson module (Fibre)" %><br />
-		    <%= d.text_field :poisson_module_fibre %>
-			</p>
-			<p>
-				<%= d.label :poisson_module_matrix, "Poisson module (Matrix)" %><br />
-		    <%= d.text_field :poisson_module_matrix %>
+		    <%= d.text_field :poisson_module_fibre, :size => 4 %>
 			</p>
 			<p>
 				<%= d.label :volume_factor_fibre, "Volume factor (Fibre)" %><br />
-		    <%= d.text_field :volume_factor_fibre %>
+		    <%= d.text_field :volume_factor_fibre, :size => 4 %>
+			</p>
+			
+			<p style="clear: both;">
+				<%= d.label :e_module_matrix, "E module (Matrix)" %><br />
+		    <%= d.text_field :e_module_matrix, :size => 4 %>GPa
 			</p>
 			<p>
-				<%= d.label :volume_factor_matrix, "Volume factor (Fibre)" %><br />
-		    <%= d.text_field :volume_factor_matrix %>
+				<%= d.label :poisson_module_matrix, "Poisson module (Matrix)" %><br />
+		    <%= d.text_field :poisson_module_matrix, :size => 4 %>
+			</p>
+			<p>
+				<%= d.label :volume_factor_matrix, "Volume factor (Matrix)" %><br />
+		    <%= d.text_field :volume_factor_matrix, :size => 4 %>
 			</p>
 		</div>
 		<div id="stiffness_container">
 			<p>
 				<%= d.label :stiffness_q11, "Q<sub>11</sub>" %><br />
-		    <%= d.text_field :stiffness_q11 %>
+		    <%= d.text_field :stiffness_q11, :size => 6 %>
 			</p>
 			<p>
 				<%= d.label :stiffness_q12, "Q<sub>12</sub>" %><br />
-		    <%= d.text_field :stiffness_q12 %>
+		    <%= d.text_field :stiffness_q12, :size => 6 %>
 			</p>
 			<p>
 				<%= d.label :stiffness_q22, "Q<sub>22</sub>" %><br />
-		    <%= d.text_field :stiffness_q22 %>
+		    <%= d.text_field :stiffness_q22, :size => 6 %>
 			</p>
-			<p>
+			<p style="clear: both;">
 				<%= d.label :stiffness_q16, "Q<sub>16</sub>" %><br />
-		    <%= d.text_field :stiffness_q16 %>
+		    <%= d.text_field :stiffness_q16, :size => 6 %>
 			</p>
 			<p>
 				<%= d.label :stiffness_q26, "Q<sub>26</sub>" %><br />
-		    <%= d.text_field :stiffness_q26 %>
+		    <%= d.text_field :stiffness_q26, :size => 6 %>
 			</p>
 			<p>
 				<%= d.label :stiffness_q66, "Q<sub>66</sub>" %><br />
-		    <%= d.text_field :stiffness_q66 %>
+		    <%= d.text_field :stiffness_q66, :size => 6 %>
 			</p>
 		</div>
 	<% end %>
 	
-  <p>
+  <p style="clear: both;">
     <%= f.submit "Save" %>
   </p>
 <% end %>

@@ -84,6 +84,14 @@
 		});
 	}
 	
+	function remove_layer(obj)
+	{
+		if ($("layers").childElements().size() > 1)
+		{
+			obj.up('div.layer').remove(); update_positions();
+		}
+	}
+	
 	function init_form()
 	{
 		Sortable.create("layers", { tag: 'div', only: 'layer', onChange: update_positions });
@@ -109,7 +117,7 @@
 			<% @calculation.layers.each do |layer| %>
 				<% fields_for "layers[#{layer_number}]", layer do |fl| %>
 					<div class="layer">
-						<div class="layer_remove"><a href="#" onclick="this.up('div.layer').remove(); update_positions(); return false;">remove</a></div>
+						<div class="layer_remove"><a href="#" onclick="remove_layer(this); return false;">remove</a></div>
 						<%= fl.hidden_field :position %>
 						<div class="layer_id"><%= layer_number %></div>
 						<p>

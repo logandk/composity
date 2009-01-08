@@ -50,12 +50,23 @@
 		<% if layer.material.data.mechanical_properties != 'isotrope' and layer.angle != 0.0 %>
 			<%=m '\theta = ' + n(layer.angle) + '^o' %><br /><br />
 	
-			<%=m '\widebar{Q_11} = Q_11 \cos^2\theta + 2(Q_12 + 2Q_66) \sin^2\theta \cos^2\theta + Q_22 \sin^4\theta' %><br />
-			<%=m '\widebar{Q_12} = (Q_11 + Q_22 - 4Q_66) \sin^2\theta \cos^2\theta + Q_12(\sin^4\theta + \cos^4\theta)' %><br />
-			<%=m '\widebar{Q_22} = Q_11 \sin^4\theta + 2(Q_12 + 2Q_66) \sin^2\theta \cos^2\theta + Q_22 \cos^4\theta' %><br />
-			<%=m '\widebar{Q_16} = (Q_11 - Q_12 - 2Q_66) \sin\theta \cos^3\theta + (Q_12 - Q_22 + 2Q_66) \sin^3\theta \cos\theta' %><br />
-			<%=m '\widebar{Q_26} = (Q_11 - Q_12 - 2Q_66) \sin^3\theta \cos\theta + (Q_12 - Q_22 + 2Q_66) \sin\theta \cos^3\theta' %><br />
-			<%=m '\widebar{Q_66} = (Q_11 + Q_22 - 2Q_12 - 2Q_66) \sin^2\theta \cos^2\theta + Q_66(\sin^4\theta + \cos^4\theta)' %><br /><br /><br />
+			<%=m '\widebar{Q_11} = Q_11 * \cos^2\theta + 2 * (Q_12 + 2*Q_66) * \sin^2\theta \cos^2\theta + Q_22 * \sin^4\theta' %><br />
+			<%=m '\widebar{Q_11} = ' + n(layer.material.stiffness[0,0]) + ' * \cos^2 ' + n(layer.angle) + ' + 2 * (' + n(layer.material.stiffness[0,1]) + ' + 2*' + n(layer.material.stiffness[2,2]) + ') * \sin^2 ' + n(layer.angle) + ' \cos^2 ' + n(layer.angle) + ' + ' + n(layer.material.stiffness[1,1]) + ' * \sin^4 ' + n(layer.angle) + ' = ' + n(layer.stiffness[0,0]) + 'MPa' %><br /><br />
+			
+			<%=m '\widebar{Q_12} = (Q_11 + Q_22 - 4Q_66) * \sin^2\theta \cos^2\theta + Q_12 * (\sin^4\theta + \cos^4\theta)' %><br />
+			<%=m '\widebar{Q_12} = (' + n(layer.material.stiffness[0,0]) + ' + ' + n(layer.material.stiffness[1,1]) + ' - 4' + n(layer.material.stiffness[2,2]) + ') * \sin^2 ' + n(layer.angle) + ' \cos^2 ' + n(layer.angle) + ' + ' + n(layer.material.stiffness[0,1]) + ' * (\sin^4 ' + n(layer.angle) + ' + \cos^4 ' + n(layer.angle) + ') = ' + n(layer.stiffness[0,1]) + 'MPa' %><br /><br />
+			
+			<%=m '\widebar{Q_22} = Q_11 *  \sin^4\theta + 2 * (Q_12 + 2 * Q_66) * \sin^2\theta * \cos^2\theta + Q_22 * \cos^4\theta' %><br />
+			<%=m '\widebar{Q_22} = ' + n(layer.material.stiffness[0,0]) + ' * \sin^4 ' + n(layer.angle) + ' + 2 * (' + n(layer.material.stiffness[0,1]) + ' + 2 * ' + n(layer.material.stiffness[2,2]) + ') * \sin^2 ' + n(layer.angle) + ' * \cos^2 ' + n(layer.angle) + ' + ' + n(layer.material.stiffness[1,1]) + ' * \cos^4 ' + n(layer.angle) + ' = ' + n(layer.stiffness[1,1]) + 'MPa' %><br /><br />
+			
+			<%=m '\widebar{Q_16} = (Q_11 - Q_12 - 2Q_66) * \sin\theta * \cos^3\theta + (Q_12 - Q_22 + 2 * Q_66) * \sin^3\theta * \cos\theta' %><br />
+			<%=m '\widebar{Q_16} = (' + n(layer.material.stiffness[0,0]) + ' - ' + n(layer.material.stiffness[0,1]) + ' - 2' + n(layer.material.stiffness[2,2]) + ') * \sin ' + n(layer.angle) + ' * \cos^3 ' + n(layer.angle) + ' + (' + n(layer.material.stiffness[0,1]) + ' - ' + n(layer.material.stiffness[1,1]) + ' + 2 * ' + n(layer.material.stiffness[2,2]) + ') * \sin^3 ' + n(layer.angle) + ' * \cos ' + n(layer.angle) + ' = ' + n(layer.stiffness[0,2]) + 'MPa' %><br /><br />
+			
+			<%=m '\widebar{Q_26} = (Q_11 - Q_12 - 2 * Q_66) * \sin^3\theta * \cos\theta + (Q_12 - Q_22 + 2 * Q_66) * \sin\theta * \cos^3\theta' %><br />
+			<%=m '\widebar{Q_26} = (' + n(layer.material.stiffness[0,0]) + ' - ' + n(layer.material.stiffness[0,1]) + ' - 2 * ' + n(layer.material.stiffness[2,2]) + ') * \sin^3 ' + n(layer.angle) + ' * \cos ' + n(layer.angle) + ' + (' + n(layer.material.stiffness[0,1]) + ' - ' + n(layer.material.stiffness[1,1]) + ' + 2 * ' + n(layer.material.stiffness[2,2]) + ') * \sin ' + n(layer.angle) + ' * \cos^3 ' + n(layer.angle) + ' = ' + n(layer.stiffness[1,2]) + 'MPa' %><br /><br />
+			
+			<%=m '\widebar{Q_66} = (Q_11 + Q_22 - 2 * Q_12 - 2 * Q_66) * \sin^2\theta * \cos^2\theta + Q_66 * (\sin^4\theta + \cos^4\theta)' %><br />
+			<%=m '\widebar{Q_66} = (' + n(layer.material.stiffness[0,0]) + ' + ' + n(layer.material.stiffness[1,1]) + ' - 2 * ' + n(layer.material.stiffness[0,1]) + ' - 2 * ' + n(layer.material.stiffness[2,2]) + ') * \sin^2 ' + n(layer.angle) + ' * \cos^2 ' + n(layer.angle) + ' + ' + n(layer.material.stiffness[2,2]) + ' * (\sin^4 ' + n(layer.angle) + ' + \cos^4 ' + n(layer.angle) + ') = ' + n(layer.stiffness[2,2]) + 'MPa' %><br /><br /><br />
 		<% end %>
 	
 		<%=m '[\widebar{Q}]_{' + symbol + '} = \left[\array{ \widebar{Q_11} & \widebar{Q_12} & \widebar{Q_16} \\\\ \widebar{Q_12} & \widebar{Q_22} & \widebar{Q_26} \\\\ \widebar{Q_16} & \widebar{Q_26} & \widebar{Q_66} }\right] = \left[\array{ ' + n(layer.stiffness[0,0]) + ' & ' + n(layer.stiffness[0,1]) + ' & ' + n(layer.stiffness[0,2]) + ' \\\\ ' + n(layer.stiffness[1,0]) + ' & ' + n(layer.stiffness[1,1]) + ' & ' + n(layer.stiffness[1,2]) + ' \\\\ ' + n(layer.stiffness[2,0]) + ' & ' + n(layer.stiffness[2,1]) + ' & ' + n(layer.stiffness[2,2]) + ' }\right] MPa' %><br /><br /><br />
