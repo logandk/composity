@@ -2,7 +2,7 @@ class CalculationsController < ApplicationController
   # GET /calculations
   # GET /calculations.xml
   def index
-    @calculations = Calculation.find(:all, :order => :updated_at)
+    @calculations = Calculation.find(:all, :order => :title)
 
     respond_to do |format|
       format.html # index.html.erb
