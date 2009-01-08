@@ -2,7 +2,7 @@ class MaterialsController < ApplicationController
   # GET /materials
   # GET /materials.xml
   def index
-    @materials = Material.find(:all)
+    @materials = Material.find(:all, :order => :name)
 
     respond_to do |format|
       format.html # index.html.erb
