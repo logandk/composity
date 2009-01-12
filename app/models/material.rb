@@ -77,7 +77,7 @@ class Material < ActiveRecord::Base
       12 => ((data.volume_factor_fibre * data.poisson_module_fibre) + (data.volume_factor_matrix * data.poisson_module_matrix))
     }
     
-    v[21] = ((v[12] / mixture[1]) * mixture[2])
+    v[21] = (v[12] * (mixture[2] / mixture[1]))
     
     v
   end

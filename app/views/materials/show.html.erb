@@ -38,7 +38,7 @@
 			<%=m 'E_2 = \frac{E_f * E_m}{V_f * E_m + V_m * E_f} = \frac{' + var(:e_module_fibre) + ' * ' + var(:e_module_matrix) + '}{' + var(:volume_factor_fibre) + ' * ' + var(:e_module_matrix) + ' + ' + var(:volume_factor_matrix) + ' * ' + var(:e_module_fibre) + '} = ' + n(@material.mixture[2]) + 'GPa' %><br /><br /><br />
 
 			<%=m '\nu_12 = V_f * \nu_f + V_m * \nu_m = ' + var(:volume_factor_fibre) + ' * ' + var(:poisson_module_fibre) + ' + ' + var(:volume_factor_matrix) + ' * ' + var(:poisson_module_matrix) + ' = ' + n(@material.poisson[12]) %><br />
-			<%=m '\nu_21 = \frac{\nu_12}{E_1} * E_2 = \frac{' + n(@material.poisson[12]) + '}{' + n(@material.mixture[1]) + '} * ' + n(@material.mixture[2]) + ' = ' + n(@material.poisson[21]) %><br /><br /><br />
+			<%=m '\nu_21 = \nu_12 * \frac{E_2}{E_1} = ' + n(@material.poisson[12]) + ' * \frac{' + n(@material.mixture[2]) + '}{' + n(@material.mixture[1]) + '} = ' + n(@material.poisson[21]) %><br /><br /><br />
 			
 			<%=m '|\nu_12| < \sqrt{\frac{E_1}{E_2}} = ' + n(@material.poisson[12]) + ' < \sqrt{\frac{' + n(@material.mixture[1]) + '}{' + n(@material.mixture[2]) + '}}' %> <strong><%= (@material.poisson[12] < Math.sqrt(@material.mixture[1] / @material.mixture[2])) ? "OK" : "ERROR" %></strong><br />
 			<%=m '|\nu_21| < \sqrt{\frac{E_2}{E_1}} = ' + n(@material.poisson[21]) + ' < \sqrt{\frac{' + n(@material.mixture[2]) + '}{' + n(@material.mixture[1]) + '}}' %> <strong><%= (@material.poisson[21] < Math.sqrt(@material.mixture[2] / @material.mixture[1])) ? "OK" : "ERROR" %></strong><br /><br /><br />
